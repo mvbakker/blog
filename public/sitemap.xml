@@ -8,6 +8,21 @@
   </url>
   
   <url>
+    <loc>https://mvbakker.github.io/blog/openfoam-on-raspi-cluster/</loc>
+    <lastmod>2016-09-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mvbakker.github.io/blog/self-hosted-nextcloud-server/</loc>
+    <lastmod>2016-08-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mvbakker.github.io/blog/my-first-blog-post/</loc>
+    <lastmod>2016-08-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://mvbakker.github.io/blog/</loc>
     <lastmod>2018-09-23T17:19:57+02:00</lastmod>
     <priority>0</priority>

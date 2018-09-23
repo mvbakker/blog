@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<meta name="author" content="Michiel Bakker">
+<meta name="description" content="So a couple of months ago I got this crazy idea. I wanted to learn more about OpenFOAM and the supercomputers they use at my university they use for CFD (computational fluid dynamics) calculations. Just a quick introduction, computational fluid dynamics calculations are performed to calculate fluid (air, water etcetera) flows for basically all kinds of stuff (airplanes, cars, wind turbines etcetera). These calculations are often very computational intensive and therefore they are performed on a cluster of computers (often called a supercomputer, but its basically just multiple computers).">
+
+<meta property="og:title" content="OpenFOAM on a Raspberry Pi cluster" />
+<meta property="og:description" content="So a couple of months ago I got this crazy idea. I wanted to learn more about OpenFOAM and the supercomputers they use at my university they use for CFD (computational fluid dynamics) calculations. Just a quick introduction, computational fluid dynamics calculations are performed to calculate fluid (air, water etcetera) flows for basically all kinds of stuff (airplanes, cars, wind turbines etcetera). These calculations are often very computational intensive and therefore they are performed on a cluster of computers (often called a supercomputer, but its basically just multiple computers)." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mvbakker.github.io/blog/openfoam-on-raspi-cluster/" /><meta property="article:published_time" content="2016-09-07T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2016-09-07T00:00:00&#43;00:00"/>
+
+<title>
+
+
+     OpenFOAM on a Raspberry Pi cluster 
+
+</title>
+<link rel="canonical" href="https://mvbakker.github.io/blog/openfoam-on-raspi-cluster/">
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Ubuntu+Mono:400,400i,700,700i|Raleway:500">
+
+
+
+    
+    <link rel="stylesheet" href="https://mvbakker.github.io/css/reset.css?t=2018-09-23%2021%3a19%3a03.93395179%20%2b0200%20CEST%20m%3d%2b0.084967314">
+    <link rel="stylesheet" href="https://mvbakker.github.io/css/pygments.css?t=2018-09-23%2021%3a19%3a03.93395179%20%2b0200%20CEST%20m%3d%2b0.084967314">
+    <link rel="stylesheet" href="https://mvbakker.github.io/css/main.css?t=2018-09-23%2021%3a19%3a03.93395179%20%2b0200%20CEST%20m%3d%2b0.084967314">
+    
+        <link rel="stylesheet" href="https://mvbakker.github.io/css/override.css?t=2018-09-23%2021%3a19%3a03.93395179%20%2b0200%20CEST%20m%3d%2b0.084967314">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="https://mvbakker.github.io/img/leaf.ico"
+
+>
+
+
+
+
+
+
+
+
+</head>
+
+
+<body lang="en">
+
+<section class="header">
+    <div class="container">
+        <div class="content">
+            
+            <a href="https://mvbakker.github.io/"><div class="name">Michiel Bakker</div></a>
+            
+            <nav>
+                <ul>
+                    
+                        <li class="nav-blog"><a href="https://mvbakker.github.io/blog/"><span>Blog</span></a></li>
+                    
+                        <li class="nav-about"><a href="https://mvbakker.github.io/about/"><span>About</span></a></li>
+                    
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<section class="icons">
+    <div class="container">
+        <div class="content">
+        
+            <a href="//github.com/mvbakker" target="_blank" rel="noopener"><img class="icon" src="https://mvbakker.github.io/img/github.svg" alt="github" /></a>
+        
+
+        
+
+        
+
+	
+
+        
+
+        
+
+        
+            <a href="//linkedin.com/in/michielvbakker" target="_blank" rel="noopener"><img class="icon" src="https://mvbakker.github.io/img/linkedin.svg" alt="linkedin" /></a>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+            <a href="mailto:mvbakkerblog@gmail.com"><img class="icon" src="https://mvbakker.github.io/img/email.svg" alt="email" /></a>
+        
+
+        
+
+        
+        </div>
+    </div>
+</section>
+
+
+<section class="main post non-narrow zero-top-spacing">
+    <div class="container">
+        <div class="content">
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
+
+    OpenFOAM on a Raspberry Pi cluster
+
+</div>
+
+                    <div class="initials"><a href="https://mvbakker.github.io/"></a></div>
+                </div>
+                <div class="meta">
+                    
+                    <div class="date" title='Wed Sep 7 2016 00:00:00 UTC'>Sep 7, 2016</div>
+                    
+                    
+		    <div class="reading-time"><div class="middot"></div>11 minutes read</div>
+                    
+                </div>
+            </div>
+            <div class="markdown">
+                
+
+<p>So a couple of months ago I got this crazy idea. I wanted to learn more about OpenFOAM and the supercomputers they use at my university they use for CFD (computational fluid dynamics) calculations. Just a quick introduction, computational fluid dynamics calculations are performed to calculate fluid (air, water etcetera) flows for basically all kinds of stuff (airplanes, cars, wind turbines etcetera). These calculations are often very computational intensive and therefore they are performed on a cluster of computers (often called a supercomputer, but its basically just multiple computers). Now OpenFOAM is an open-source CFD application that is widely used for flow analysis. After doing a little bit of research I found out that people actually got OpenFOAM compiled and running on a Raspberry Pi. I got excited and crazy ideas about building a cluster of Raspberry Pis and running multicore flow analyses. I knew right away that this was not going to be fast though. So if you&rsquo;re reading this with the intension to build it yourself since RasPi&rsquo;s are cheap and it all sounds fancy with terms as supercomputer and multicore CFD calculations, don&rsquo;t be mistaken, a simple Intel processor is already much faster!</p>
+
+<p>However, I still wanted to do this! Just because it seemed like a nice challenge and a great learning experience. So I got myself five Raspberry Pi 2B with all the needed extras:</p>
+
+<ul>
+<li>5x 16GB microSD cards</li>
+<li>5x microUSB powercables</li>
+<li>a charging station USB-hub (don&rsquo;t cheap out on this, or it will give you headaches later, a Raspberry Pi 2B needs 2Amps preferably)</li>
+<li>2x a five-port switch (one 6-port switch would&rsquo;ve been better but I had these laying around anyway)</li>
+<li>Couple of LAN-cables</li>
+</ul>
+
+<p>I also build a rack in which I could mount them nicely out of some metal nuts and bolts and some perspex.</p>
+
+<p>So in this blog post I&rsquo;d like to show you what and how I did. Unfortunately I can already say that in the end I did not succeed completely. I was able to run OpenFOAM and I set up the complete system on multiple Pi&rsquo;s. I did manage to run OpenFOAM simulations using four cores on one Raspberry Pi as well, just in the end I did not get it to work using multiple Raspberry Pi. This was mostly because OpenFOAM is a complex application and I couldn&rsquo;t configure it such that it would be able to communicate with the other Pi&rsquo;s and share all the data nicely. I still do not know what is going wrong specifically but I&rsquo;ll share my hypotheses at the end of this post.</p>
+
+<h2 id="install-openfoam-on-a-raspberry-pi">Install OpenFOAM on a Raspberry Pi</h2>
+
+<p>Assuming the reader is already a little bit familiar with a Raspberry Pi and Linux in general. So please install the most recent version of Raspbian, just get it from their website. We&rsquo;ll just be using the terminal, so skip the whole GUI with a desktop environment. I found out (the hard way) that choosing a keyboard different than the regular &lsquo;US&rsquo; will almost always give you trouble. (Honestly, I don&rsquo;t understand why each country needs it&rsquo;s own different keyboard configuration. But I guess that&rsquo;s just me).
+It&rsquo;s always a good idea to change your repository mirror server to one close by. Go to the <a href="http://www.raspbian.org/RaspbianMirrors">repository mirror website</a> and see which mirror server is the nearest to your home. Change the sources.list by typing in the terminal,</p>
+
+<pre><code class="language-terminal">sudo nano /etc/apt/sources.list
+</code></pre>
+
+<p>This is the location where the &lsquo;apt-get&rsquo; (your package manager) keeps it sources located. Typ a &lsquo;#&rsquo; in front of the first line (this will make the line a comment) and type your repository mirror server below, for instance like</p>
+
+<pre><code class="language-terminal">deb http://raspbian.mirror.triple-it.nl/raspbian/ wheezy main firmware
+</code></pre>
+
+<p>Which was best for my home. Make sure you now update and upgrade your system.</p>
+
+<pre><code class="language-terminal">sudo apt-get update &amp;&amp; sudo apt-get upgrade &amp;&amp; sudo apt-get clean
+</code></pre>
+
+<p>This might take a couple of minutes, especially if it&rsquo;s the first time you do this after installation. It&rsquo;s always best to reboot your system quickly after this before you continue,</p>
+
+<pre><code class="language-terminal">sudo reboot
+</code></pre>
+
+<p>So lets start the installation of OpenFOAM! Create a directory for the installation.</p>
+
+<pre><code class="language-terminal">mkdir /home/pi/OpenFOAM
+</code></pre>
+
+<p>Now since we run this all in the terminal without a graphical interface going to a website and downloading the sourcecode of OpenFOAM would be a bit difficult. Or so I thought! But then I found Lynx, a textbased web browser! This works quite funny and its maybe best if you first go to the website of OpenFOAM with a normal web browser on a different computer just to see what you&rsquo;re looking for. However, lynx is quite awesome, please install it,</p>
+
+<pre><code class="language-terminal">sudo apt-get install lynx
+</code></pre>
+
+<p>Have a look at the manual, although it works quite easily. Use the up and down arrows to go through clickable links, the back arrow for previous page and enter to &lsquo;click&rsquo; on the selected link. Once you&rsquo;ve quickly read the manual of lynx (terminal: &lsquo;man lynx&rsquo;) enter in the terminal,</p>
+
+<pre><code class="language-terminal">lynx http://www.openfoam.org/download/source.php
+</code></pre>
+
+<p>And download the files (don&rsquo;t forget to type &lsquo;Y&rsquo; once you&rsquo;ve downloaded them, since lynx will ask you whether you&rsquo;d like to save the downloaded files. When you do not do this, it will not save the downloaded files and you&rsquo;ll have to download them again),</p>
+
+<ul>
+<li>OpenFOAM-2.4.0.tgz</li>
+<li>ThirdParty-2.4.0.tgz</li>
+</ul>
+
+<p>When I tried to compile OpenFOAM 3 it gave a building error and unfortunately changing a sourcecode so it would compile correctly is still beyond of my skill set.</p>
+
+<p>Unpack the files by running,</p>
+
+<pre><code class="language-terminal">tar -xvzf OpenFOAM-2.4.0.tgz &amp;&amp; tar -xvzf ThirdParty-2.4.0.tgz
+</code></pre>
+
+<p>(If you don&rsquo;t know what the &lsquo;-xvzf&rsquo; does, I encourage you to read the manual). (Sorry, not trying to be a bitch, it&rsquo;s just that reading manuals is something I really had to get used to myself). Alright, now in order to compile OpenFOAM from the sourcecode we&rsquo;ll need to do a slight adjustment to two files, namely cOpt and c++Opt which are located at,</p>
+
+<pre><code class="language-terminal">cd /home/pi/OpenFOAM/OpenFOAM-2.4.0/wmake/rules/linuxARM7gcc
+</code></pre>
+
+<p>Now open &lsquo;cOpt&rsquo; and &lsquo;c++Opt&rsquo; in your favorite editor (or just use nano) and comment the line which ends with &lsquo;-mfloat-abi=softfp&rsquo; thereafter uncomment the line that ends with &lsquo;-mfloat-abi=hard&rsquo;. Do this for both files and safe them. Then go back to the OpenFOAM-2.4.0 directory,</p>
+
+<pre><code class="language-terminal">cd /home/pi/OpenFOAM/OpenFOAM-2.4.0
+</code></pre>
+
+<p>During the installation of OpenFOAM the program needs to know stuff about your system. Therefore the global variables need to be given/loaded. You do this by running,</p>
+
+<pre><code class="language-terminal">source /home/pi/OpenFOAM/OpenFOAM-2.4.0/etc/bashrc
+</code></pre>
+
+<p>Now we can finally compile OpenFOAM,</p>
+
+<pre><code class="language-terminal">./Allwmake
+</code></pre>
+
+<p>This will take hours/days, since it will only use one core. Once it&rsquo;s done go play with it. I found this amazing <a href="http://the-foam-house5.webnode.es/products-/">OpenFOAM tutorial</a> online made by a fellow student. If you don&rsquo;t have any experience with the &lsquo;C&rsquo; or &lsquo;C++&rsquo; language, you may first want to do a tutorial on that. After getting to know OpenFOAM continue with the next section of this post.</p>
+
+<h2 id="configure-multiple-raspi-s-for-cluster">Configure multiple RasPi&rsquo;s for Cluster</h2>
+
+<p>The only thing left is basically setting up each individual RasPi and set up an Network File System (NFS) and distribute public keys so that they can talk freely to one another. Also the network settings per RasPi will have to be configured so that they&rsquo;ll have a static IP address. This is necessary for them to be able to find each other but it&rsquo;s also very handy that you&rsquo;ll be able to SSH into each RasPi for some changes when necessary. These are all basics widely covered on other websites as well.</p>
+
+<p>Start by checking the current configuration. The setup file is called &lsquo;interfaces&rsquo; and is located in at &lsquo;/etc/network/interfaces&rsquo;. Use the &lsquo;cat&rsquo; or &lsquo;less&rsquo; command to read it quickly,</p>
+
+<pre><code class="language-terminal">less /etc/networks/interfaces
+</code></pre>
+
+<p>If you didn&rsquo;t touch this file yet it probably looks something like,</p>
+
+<pre><code>auto lo
+
+iface lo inet loopback
+
+auto eth0
+allow-hotplug eth0
+iface eth0 inet manual
+</code></pre>
+
+<p>etcetera.</p>
+
+<p>This file is used to configure your network settings. In order to set up a static IP address, we first need to know some information about the network we&rsquo;re on. For instance the router address etc. The &lsquo;ifconfig&rsquo; command will give you quite some info. Type,</p>
+
+<pre><code class="language-terminal">ifconfig
+</code></pre>
+
+<p>and make a note of the current &lsquo;inet addr&rsquo;, &lsquo;Bcast&rsquo; and &lsquo;Mask&rsquo; next to the &lsquo;eth0&rsquo;. For me those current values are: (However those could be very different to you!)</p>
+
+<ul>
+<li>inet addr: 192.168.1.26</li>
+<li>Bcast: 192.168.1.255</li>
+<li>Mask: 255.255.255.0</li>
+</ul>
+
+<p>Another command we need to get the final information is &lsquo;route -n&rsquo;. Go ahead and type it in the terminal,</p>
+
+<pre><code class="language-terminal">route -n
+</code></pre>
+
+<p>And make a note of the &lsquo;Destination&rsquo; and &lsquo;Gateway&rsquo; values, for me those are:</p>
+
+<ul>
+<li>Destination: 192.168.1.0</li>
+<li>Gateway: 192.168.1.1</li>
+</ul>
+
+<p>Remember that my values can be very different to your values. Now we&rsquo;ll need to configure the file we checked first. We&rsquo;ll need to set the addresses we just found and set a static IP so we&rsquo;ll always know the address of our RasPi. So in order to configure the RasPi type in the terminal,</p>
+
+<pre><code class="language-terminal">sudo nano /etc/network/interfaces
+</code></pre>
+
+<p>The configuration file should now open (possibly after you enter the root password). Change this file to,</p>
+
+<pre><code>auto lo
+iface lo inet loopback
+
+iface eth0 inet static
+address &quot;your inet addr&quot;
+netmask &quot;your mask&quot;
+network &quot;your destination&quot;
+broadcast &quot;your bcast&quot;
+gateway &quot;your gateway&quot;
+
+auto wlan0
+</code></pre>
+
+<p>and leave everything below as it is. Note that between you should replace for instance &ldquo; by your value found at &lsquo;Mask&rsquo; earlier.
+Now make sure you DOUBLE CHECK everything before entering the command: ctrl+x
+Followed by a &lsquo;y&rsquo; command followed by an enter to make sure you safe the file. Now remove all the old DHCP files by typing in the terminal,</p>
+
+<pre><code class="language-terminal">sudo rm /var/lib/dhcp/*
+</code></pre>
+
+<p>Now reboot your system by,</p>
+
+<pre><code class="language-terminal">sudo reboot
+</code></pre>
+
+<p>Wait for your system to reboot and run,</p>
+
+<pre><code class="language-terminal">ifconfig
+</code></pre>
+
+<p>To check if the new configuration worked. The &lsquo;inet addr&rsquo; should now be the address you have supplied in the &lsquo;/etc/network/interfaces&rsquo; file and should now be static. You can now easily SSH to your RasPi by typing in the terminal of your laptop/desktop computer:</p>
+
+<pre><code>ssh &quot;your user name on the pi&quot;@&quot;your inet addr&quot;
+</code></pre>
+
+<p>Oke now let&rsquo;s set up SSH, with public/private keys, config-file and all that. This makes accessing each RasPi much easier. Moreover, by exchanging public keys you&rsquo;ll be logged in automatically.</p>
+
+<p>First let&rsquo;s change the hostname of your RasPi, otherwise you&rsquo;ll have all these computers with all the same names by default, namely &lsquo;raspberry&rsquo;. Enter in the terminal of your RasPi:</p>
+
+<pre><code>sudo nano /etc/hosts
+</code></pre>
+
+<p>And change the name after the &lsquo;127.0.1.1&rsquo; IP address (so do not change the name &lsquo;localhost&rsquo;). Do not change anything else either, safe the file and leave. Now open the hostname file to configure your hostname of the RasPi. Type in the terminal,</p>
+
+<pre><code class="language-terminal">sudo nano /etc/hostname
+</code></pre>
+
+<p>Remove everything and fill in the same hostname you just entered in the &lsquo;hosts&rsquo; file. Then, in order to initialize the change, run,</p>
+
+<pre><code class="language-terminal">sudo /etc/init.d/hostname.sh
+</code></pre>
+
+<p>Thereafter reboot your RasPi.</p>
+
+<pre><code class="language-terminal">sudo reboot
+</code></pre>
+
+<p>Now when you log in again the new hostname should be shown. Now in order to set up a set keys for the SSH, we need to create them first. Run in the terminal,</p>
+
+<pre><code class="language-terminal">ssh-keygen -t rsa -C &quot;your pi name of choice&quot;
+</code></pre>
+
+<p>Safe the keys in the general &lsquo;/home/pi/.ssh&rsquo; directory. Now push your public-key of the computer you wish to login with to the computer you wish to login to. This can be done in the terminal using the following (slightly more advanced to some maybe) command,</p>
+
+<pre><code class="language-terminal">cat ~/.ssh/id_rsa.pub | ssh &quot;username&quot;@&quot;ip address&quot; 'cat &gt;&gt; .ssh/authorized_keys'
+</code></pre>
+
+<p>Now it will ask for some passwords and thereafter everything should be up and running. Now if you do not want to remember all the static IP addresses of your RasPi&rsquo;s you can add known hosts in the &lsquo;hosts&rsquo; file we edited earlier. Just add the IP address of another and add the hostname of that RasPi. Now when you SSH into it you do not have to type the IP address but you can simply type,</p>
+
+<pre><code class="language-terminal">ssh &quot;username&quot;@&quot;hostname-of-the-other-Pi&quot;
+</code></pre>
+
+<p>Now unfortunately I could not get it all to work with OpenFOAM. I have tried to run simulations using multiple RasPi&rsquo;s but I kept getting errors. It basically came down to this, they were not able to find the input data which was on the master node. I made a NFS directory from which I ran everything. Also all the environment variables/paths were the same for all the RasPi&rsquo;s so I couln&rsquo;t see where it went wrong and why the slavenodes were not able to get the input data.</p>
+
+<p>There is also not a lot of people playing around with this kinda stuff. I tried solving it, but after a while I just didn&rsquo;t know what to try anymore and also didn&rsquo;t have the time to dive into OpenFOAM. I suspect that I just didn&rsquo;t configure OpenFOAM correctly, which is quite plausible since it&rsquo;s a very complex program. Especially if you want to do stuff  with a computer cluster like this.</p>
+
+<p>My final master thesis project started so I had to let this go sadly enough. So I decided to try and write everything done for you guys and maybe some of you will figure it out. If you do, please let me know, my email address is on the frontpage!</p>
+
+                <br>
+                
+                <p class="back-to-posts"><a href="https://mvbakker.github.io/blog">Back to posts</a></p>
+            </div>
+            <br>
+            <div class="disqus">
+                
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
+  
+
+  <script type="text/javascript">
+    hljs.initHighlightingOnLoad();
+  </script>
+
+
+
+
+
+</body>
+</html>
+

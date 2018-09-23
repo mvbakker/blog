@@ -21,5 +21,25 @@
 Below I&amp;rsquo;ll describe why and how I did this (so far). Please note that I am still learning about K8s as well as Ansible, so it could well be that there are other or better ways to do this.</description>
     </item>
     
+    <item>
+      <title>OpenFOAM on a Raspberry Pi cluster</title>
+      <link>https://mvbakker.github.io/blog/openfoam-on-raspi-cluster/</link>
+      <pubDate>Wed, 07 Sep 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://mvbakker.github.io/blog/openfoam-on-raspi-cluster/</guid>
+      <description>So a couple of months ago I got this crazy idea. I wanted to learn more about OpenFOAM and the supercomputers they use at my university they use for CFD (computational fluid dynamics) calculations. Just a quick introduction, computational fluid dynamics calculations are performed to calculate fluid (air, water etcetera) flows for basically all kinds of stuff (airplanes, cars, wind turbines etcetera). These calculations are often very computational intensive and therefore they are performed on a cluster of computers (often called a supercomputer, but its basically just multiple computers).</description>
+    </item>
+    
+    <item>
+      <title>My first blog post</title>
+      <link>https://mvbakker.github.io/blog/my-first-blog-post/</link>
+      <pubDate>Wed, 17 Aug 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://mvbakker.github.io/blog/my-first-blog-post/</guid>
+      <description>Welcome to my blog!
+So far it is rather empty but prepare for some nice posts. Currently I am working on my graduation project so I am a little short on time. However I have got some nice projects laying around which I like to write about on this blog. What kind of projects can you expect?
+ My five-node Raspberry Pi 2B cluster (hopefully running OpenFOAM simulations) I am currently working on setting up an OwnCloud server on an UP-board And maybe a post on my experience with Linux so far  As I said, it could take a little time.</description>
+    </item>
+    
   </channel>
 </rss>

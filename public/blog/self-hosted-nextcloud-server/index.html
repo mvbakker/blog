@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<meta name="author" content="Michiel Bakker">
+<meta name="description" content="So I&rsquo;ve been thinking about setting up my own cloud service for a while now. I think it is good to be a little selfhosted nowadays. Recently I bought an UP-Board and this little powerfull computer seemed just perfect for this project. In this post I will not walk you through all the steps specifically. However I will show you what manuals and instructions I used and what problems arose during the process and how I solved those.">
+
+<meta property="og:title" content="A Self-hosted Nextcloud server" />
+<meta property="og:description" content="So I&rsquo;ve been thinking about setting up my own cloud service for a while now. I think it is good to be a little selfhosted nowadays. Recently I bought an UP-Board and this little powerfull computer seemed just perfect for this project. In this post I will not walk you through all the steps specifically. However I will show you what manuals and instructions I used and what problems arose during the process and how I solved those." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mvbakker.github.io/blog/self-hosted-nextcloud-server/" /><meta property="article:published_time" content="2016-08-20T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2016-08-20T00:00:00&#43;00:00"/>
+
+<title>
+
+
+     A Self-hosted Nextcloud server 
+
+</title>
+<link rel="canonical" href="https://mvbakker.github.io/blog/self-hosted-nextcloud-server/">
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Ubuntu+Mono:400,400i,700,700i|Raleway:500">
+
+
+
+    
+    <link rel="stylesheet" href="https://mvbakker.github.io/css/reset.css?t=2018-09-23%2021%3a19%3a03.937842113%20%2b0200%20CEST%20m%3d%2b0.088857324">
+    <link rel="stylesheet" href="https://mvbakker.github.io/css/pygments.css?t=2018-09-23%2021%3a19%3a03.937842113%20%2b0200%20CEST%20m%3d%2b0.088857324">
+    <link rel="stylesheet" href="https://mvbakker.github.io/css/main.css?t=2018-09-23%2021%3a19%3a03.937842113%20%2b0200%20CEST%20m%3d%2b0.088857324">
+    
+        <link rel="stylesheet" href="https://mvbakker.github.io/css/override.css?t=2018-09-23%2021%3a19%3a03.937842113%20%2b0200%20CEST%20m%3d%2b0.088857324">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="https://mvbakker.github.io/img/leaf.ico"
+
+>
+
+
+
+
+
+
+
+
+</head>
+
+
+<body lang="en">
+
+<section class="header">
+    <div class="container">
+        <div class="content">
+            
+            <a href="https://mvbakker.github.io/"><div class="name">Michiel Bakker</div></a>
+            
+            <nav>
+                <ul>
+                    
+                        <li class="nav-blog"><a href="https://mvbakker.github.io/blog/"><span>Blog</span></a></li>
+                    
+                        <li class="nav-about"><a href="https://mvbakker.github.io/about/"><span>About</span></a></li>
+                    
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<section class="icons">
+    <div class="container">
+        <div class="content">
+        
+            <a href="//github.com/mvbakker" target="_blank" rel="noopener"><img class="icon" src="https://mvbakker.github.io/img/github.svg" alt="github" /></a>
+        
+
+        
+
+        
+
+	
+
+        
+
+        
+
+        
+            <a href="//linkedin.com/in/michielvbakker" target="_blank" rel="noopener"><img class="icon" src="https://mvbakker.github.io/img/linkedin.svg" alt="linkedin" /></a>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+            <a href="mailto:mvbakkerblog@gmail.com"><img class="icon" src="https://mvbakker.github.io/img/email.svg" alt="email" /></a>
+        
+
+        
+
+        
+        </div>
+    </div>
+</section>
+
+
+<section class="main post non-narrow zero-top-spacing">
+    <div class="container">
+        <div class="content">
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
+
+    A Self-hosted Nextcloud server
+
+</div>
+
+                    <div class="initials"><a href="https://mvbakker.github.io/"></a></div>
+                </div>
+                <div class="meta">
+                    
+                    <div class="date" title='Sat Aug 20 2016 00:00:00 UTC'>Aug 20, 2016</div>
+                    
+                    
+		    <div class="reading-time"><div class="middot"></div>8 minutes read</div>
+                    
+                </div>
+            </div>
+            <div class="markdown">
+                
+
+<p>So I&rsquo;ve been thinking about setting up my own cloud service for a while now. I think it is good to be a little selfhosted nowadays. Recently I bought an <a href="http://up-board.org">UP-Board</a> and this little powerfull computer seemed just perfect for this project. In this post I will not walk you through all the steps specifically. However I will show you what manuals and instructions I used and what problems arose during the process and how I solved those. Also, being a beginner myself, I try to understand what is actually all happening and explain my findings to you. Probably I am not a 100% correct, but just trying to explain it to you helps me as well. Good luck and I hope you enjoy!</p>
+
+<h2 id="server-with-a-lamp-stack-installed">Server with a LAMP stack installed</h2>
+
+<p>So a server is your computer, or in my case this small UP-Board. You can run Linux and attach a screen with a keyboard and mouse and it will just work as a regular desktop computer. However you can also run a linux-server on it. This has some major differences, the first being that this linux-server will not have a graphical user interface. So there is only a terminal showing the commandline. (Honestly, if you&rsquo;re interested in these kind of things I encourage you to become really handy with working in the commandline as soon as possible).</p>
+
+<p>Nextcloud advises to use the Ubuntu server 14.04 LTS as the operating system. This can be easily installed using an USB-stick and <a href="http://www.tecmint.com/ubuntu-14-04-server-installation-guide-and-lamp-setup/">this guide</a>. It also explains how to install a LAMP stack. But what is a LAMP stack?</p>
+
+<p>But what is a LAMP stack of which I am talking about. LAMP stands for Linux Apache MySQL PHP, which defines the setup for the server. The main operating system being Linux (so for instance Ubuntu).</p>
+
+<p>Apache is the webserver, you can see it as the manager of your server. Apache handles the requests by the visitors of your server. So if somebody for instance types in your website address which is hosted by your server than the Apache software tells your server what to do and Apache makes sure the request is handled and &lsquo;served&rsquo; back to that somebody.</p>
+
+<p>MySQL is the database. Here is where all the data is stored. Apache can for instance request data from the database. You can see the database as one big closet filled with all your stuff. MySQL then knows exactly where all your stuff is stored, however you have to correctly ask for it in order to receive it. These questions to the database are called queries.</p>
+
+<p>Finally PHP. This is used for running programs by the webserver. It can manipulate the data given by the database for instance. It also creates the pages that the Apache webserver then can send back to the visitor of your site.</p>
+
+<p>So imagine you are on a forum. The page in the browser that you see is a page that you have requested. So once you pressed enter after typing in the URL-address your web browser sends a request to the server that runs the forum of your URL-address. Now the webserver (for instance Apache) receives this request and handles it and runs the PHP-script creating a html-page. If there is data needed from the database, for instance other posts on the forum, the PHP-script will get this from the database and uses it to create the html-page. Once this html-page is ready the Apache server will send it back to you and your web browser will present the html-page to your screen.</p>
+
+<p>Nextcloud also uses this LAMP setup, however in a much more complex way. Still the basics are the same: Linux is the operating system, Apache handles the requests, MySQL is the database and PHP is the programming language. It is also possible to use a different setup. Instead of Apache there is also Nginx, or instead of MySQL there is also PostGreSQL or instead of PHP, Python is also often used. Now that we know how servers work in general let&rsquo;s continue with the setup of Nextcloud.</p>
+
+<h2 id="nextcloud-installation">Nextcloud installation</h2>
+
+<p>Well once you&rsquo;ve got your Ubuntu server up and running it is time for the actual Nextcloud installation. The <a href="https://docs.nextcloud.com/server/9/admin_manual/contents.html">Nextcloud 9 Server Administration Manual</a> has a quite straight forward procedure described to <a href="https://docs.nextcloud.com/server/9/admin_manual/installation/source_installation.html">install Nextcloud</a> manually. It is sometimes a little unclear since it sends you to different pages for specific configurations while you don&rsquo;t even know whether you need them. (Or it is probably just me being a noob). Anyway, it states all the packages you&rsquo;ll need to install and then let&rsquo;s you download the Nextcloud server. I will not retype the whole manual, however I will comment on the stuff I found unclear or I had to change for myself to get it to work. For me the &lsquo;wget&rsquo; option did not work since I could not get the PGP signature verified. So I install lynx by,</p>
+
+<pre><code class="language-terminal">sudo apt-get install lynx
+</code></pre>
+
+<p>Lynx is a text-based web browser so you&rsquo;re able to browse the web without a graphical interface. You can read the entire manual but the usage is quite easy, just be careful hitting the arrow-keys as for instance the &lt;- arrow key actually means &lsquo;previous page&rsquo;. In short you&rsquo;ll need the following keys:</p>
+
+<ul>
+<li>&lsquo;G&rsquo;: for Go, now you are able to type a URL-address</li>
+<li>Up- and down: this goes through all the clickable links on the page</li>
+<li>Enter: to &lsquo;click&rsquo; on the selected link</li>
+<li>&rsquo;D&rsquo;: to verify that you would like to download a file when clicked on a &lsquo;download&rsquo;-button</li>
+<li>&lsquo;Y&rsquo;: to verify that you would like to save the downloaded filled</li>
+<li>&lsquo;Q&rsquo;: to quit</li>
+</ul>
+
+<p>The fifth point is actually quite important. When you forget this step the file will not be saved and you&rsquo;ll have to download the file again. I&rsquo;ve made this mistake several times already. Just continue the manual from here on.</p>
+
+<p>After downloading the Nextcloud server there is a header stating &lsquo;BINLOG_FORMAT = STATEMENT&rsquo; which in my opinion should not be there but maybe later in this page. It is about an error message you could get during installation. However, skip it for now since we&rsquo;re not installing yet, first the apache web server will need to be configured.</p>
+
+<p>During the Apache configurations it says somewhere the if you&rsquo;re running the &lsquo;mod_fcgi&rsquo; instead of the standard &lsquo;mod_php&rsquo; then you should enable another module as well. It has something to do with the way PHP is run by your web server. You can read about it <a href="http://blog.layershift.com/which-php-mode-apache-vs-cgi-vs-fastcgi/">here</a> or <a href="https://www.chriswiegman.com/2011/10/fastcgi-vs-suphp-vs-cgi-vs-mod_php-dso/">here</a> or google it yourself, however I could not find a way to check which of mode I am running. So I&rsquo;ll just assume &lsquo;mod_php&rsquo; and continue.</p>
+
+<p>Once you get to the section &lsquo;Installation Wizard&rsquo; go to the link that says &lsquo;Setting Strong Directory Permissions&rsquo;. There read the page and create the bash script they provide. Make sure that once you&rsquo;ve created the script you&rsquo;ll make it executable (seems trivial) and then you can run it. Then go back to the installation manual. Before you continue on the page &lsquo;Installation Nextcloud From the Command Line&rsquo; you first have to create a <a href="https://docs.nextcloud.com/server/9/admin_manual/configuration_database/linux_database_configuration.html#db-binlog-label">database</a> (yes, click it for the instructions).</p>
+
+<p>When creating the &lsquo;mysql.ini&rsquo; file, note that they give the wrong path (I think). Do not <strong>not</strong> use,</p>
+
+<pre><code class="language-terminal">/etc/php5/conf.d/mysql.ini
+</code></pre>
+
+<p>But use,</p>
+
+<pre><code class="language-terminal">/etc/php5/apache2/conf.d/mysql.ini
+</code></pre>
+
+<p>When creating a database make sure you just use the exact names as they propose. Do not try to be smart and change &lsquo;username&rsquo; into something different because apparently that does not work. Even let the password be &lsquo;password&rsquo; <em>sigh</em>. It seems that somewhere in the installation procedure those values are hard-coded. So even if you adjust the way you run the &lsquo;occ maintenance:install&rsquo; procedure to follow your custom username, it does not seem to work. I had to delete the first database and created a new one, just typed everything exactly like they told me to. Then I ran</p>
+
+<pre><code class="language-terminal">sudo -u www-data php /var/www/nextcloud/occ  maintenance:install --database &quot;mysql&quot; --database-name &quot;nextcloud&quot;  --database-user &quot;root&quot; --database-pass &quot;password&quot; --admin-user &quot;admin&quot; --admin-pass &quot;password&quot;
+</code></pre>
+
+<p>(due to the changed permissions I was not allowed in the &lsquo;/var/www/nextcloud/&rsquo; directory anymore, but this worked fine) and I got,</p>
+
+<pre><code class="language-terminal">Nextcloud is not installed - only a limited number of commands are available
+ownCloud was successfully installed
+</code></pre>
+
+<p>So it worked! Little shocked it said &lsquo;ownCloud&rsquo; though, but that&rsquo;s probably since it&rsquo;s based largely on ownCloud I guess?</p>
+
+<h2 id="nextcloud-configuration">Nextcloud configuration</h2>
+
+<p>So when I went to my local ip-address of my UP-board and the page of nextcloud it gave an error. You tipe in the browser,</p>
+
+<pre><code>http://your-ip-address/nextcloud
+</code></pre>
+
+<p>And it said something about untrusted domain. That is because Nextcloud only has &lsquo;localhost&rsquo; as a trusted domain in it config file. This config file is however owned by the HTTP user (www-data). Adjust the file by sudo&rsquo;ing nano to this config.php file and add its own local ip-address as a trusted domain. Now it should work and you can log in using &lsquo;admin&rsquo; and &lsquo;password&rsquo; (please change this right away).</p>
+
+<h2 id="port-forwarding">Port-forwarding</h2>
+
+<p>Well now you should look into your router and see if it supports port-forwarding. It means that when you go to your ip-address in a browser somewhere and add that port, your router knows that you want to connect to your Nextcloud server and it makes the connection. My advice is not to use a regular port, that makes it harder for others to find it (brings a little security?). You&rsquo;ll have to change your VirtualHost files too then though, since the web server also has to listen to that specific port. Just go to,</p>
+
+<pre><code class="language-terminal">sudo nano /etc/apache2/ports.conf
+</code></pre>
+
+<p>and add,</p>
+
+<pre><code class="language-nano">Listen 'port-of-your-choice'
+</code></pre>
+
+<p>Then go to,</p>
+
+<pre><code class="language-terminal">sudo nano /etc/apache2/sites-available/000-default.conf
+</code></pre>
+
+<p>and add,</p>
+
+<pre><code class="language-nano">&lt;VirtualHost *:port-of-your-choice&gt;
+  ServerAdmin webmaster@localhost
+  DocumentRoot /var/www/nextcloud
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+&lt;/VirtualHost&gt;
+</code></pre>
+
+<p>Save and restart the apache web server,</p>
+
+<pre><code class="language-terminal">sudo service apache2 restart
+</code></pre>
+
+<p>And it should work! Enjoy!</p>
+
+                <br>
+                
+                <p class="back-to-posts"><a href="https://mvbakker.github.io/blog">Back to posts</a></p>
+            </div>
+            <br>
+            <div class="disqus">
+                
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
+  
+
+  <script type="text/javascript">
+    hljs.initHighlightingOnLoad();
+  </script>
+
+
+
+
+
+</body>
+</html>
+
