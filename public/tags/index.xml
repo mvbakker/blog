@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on My New Blog</title>
-    <link>http://mvbakker.github.io/tags/</link>
-    <description>Recent content in Tags on My New Blog</description>
+    <title>Tags on Michiel Bakker</title>
+    <link>https://mvbakker.github.io/tags/</link>
+    <description>Recent content in Tags on Michiel Bakker</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <copyright>Copyright (c) 2008 - 2014, Steve Francia; all rights reserved.</copyright>
+    <language>en-US</language>
     
-	<atom:link href="http://mvbakker.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://mvbakker.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
   </channel>

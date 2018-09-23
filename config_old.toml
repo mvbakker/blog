@@ -1,0 +1,27 @@
+baseurl = "http://mvbakker.github.io/"
+languageCode = "en-us"
+title = "My New Blog"
+theme = "cocoa"
+
+#if not set copyright, default copyright template will be applied
+copyright = "Copyright (c) 2018; all rights reserved."
+
+[params]
+    # See themes/nofancy/static/highlight/styles for available options
+    # i.e. "default", "github", "monokai".
+    highlight="Assign a syntax highlight style"
+	
+    # Controls what items are listed in the top nav menu
+    # "none", or "categories"
+    # If you have too many categories to fit in the top nav menu, set this to "none"
+    topmenu="categories"
+
+[permalinks]
+    post = "/:year/:title/"
+	
+[author]
+    name = "Michiel Bakker"
+    github = "mvbakker"
+    linkedin = "YOUR LINKEDIN ID"
+    gaID = "YOUR Google Analytics Tracking ID"
+    twitter = "YOUR TWITTER ID"

@@ -3,17 +3,35 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>http://mvbakker.github.io/categories/</loc>
+    <loc>https://mvbakker.github.io/blog/k8s-cluster-part-1/</loc>
+    <lastmod>2018-09-23T17:19:57+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mvbakker.github.io/blog/</loc>
+    <lastmod>2018-09-23T17:19:57+02:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://mvbakker.github.io/</loc>
+    <loc>https://mvbakker.github.io/categories/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>http://mvbakker.github.io/tags/</loc>
+    <loc>https://mvbakker.github.io/</loc>
+    <lastmod>2018-09-23T17:19:57+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mvbakker.github.io/categories/posts/</loc>
+    <lastmod>2018-09-23T17:19:57+02:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://mvbakker.github.io/tags/</loc>
     <priority>0</priority>
   </url>
   

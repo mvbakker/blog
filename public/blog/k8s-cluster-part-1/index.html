@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<meta name="author" content="Michiel Bakker">
+<meta name="description" content="Introduction About a week ago I started learning about K8s. Soon a learned that there are plenty possibilties to run a cluster yourself online (katacoda, play-with-k8s) but I also learned many people installed it themselves on a Raspberry Pi cluster. Challenge accepted!
+Below I&rsquo;ll describe why and how I did this (so far). Please note that I am still learning about K8s as well as Ansible, so it could well be that there are other or better ways to do this.">
+
+<meta property="og:title" content="K8s Cluster - Part 1" />
+<meta property="og:description" content="Introduction About a week ago I started learning about K8s. Soon a learned that there are plenty possibilties to run a cluster yourself online (katacoda, play-with-k8s) but I also learned many people installed it themselves on a Raspberry Pi cluster. Challenge accepted!
+Below I&rsquo;ll describe why and how I did this (so far). Please note that I am still learning about K8s as well as Ansible, so it could well be that there are other or better ways to do this." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mvbakker.github.io/blog/k8s-cluster-part-1/" /><meta property="article:published_time" content="2018-09-23T17:19:57&#43;02:00"/>
+<meta property="article:modified_time" content="2018-09-23T17:19:57&#43;02:00"/>
+
+<title>
+
+
+     K8s Cluster - Part 1 
+
+</title>
+<link rel="canonical" href="https://mvbakker.github.io/blog/k8s-cluster-part-1/">
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Ubuntu+Mono:400,400i,700,700i|Raleway:500">
+
+
+
+    
+    <link rel="stylesheet" href="https://mvbakker.github.io/css/reset.css?t=2018-09-23%2019%3a49%3a15.047145813%20%2b0200%20CEST%20m%3d%2b0.083348543">
+    <link rel="stylesheet" href="https://mvbakker.github.io/css/pygments.css?t=2018-09-23%2019%3a49%3a15.047145813%20%2b0200%20CEST%20m%3d%2b0.083348543">
+    <link rel="stylesheet" href="https://mvbakker.github.io/css/main.css?t=2018-09-23%2019%3a49%3a15.047145813%20%2b0200%20CEST%20m%3d%2b0.083348543">
+    
+        <link rel="stylesheet" href="https://mvbakker.github.io/css/override.css?t=2018-09-23%2019%3a49%3a15.047145813%20%2b0200%20CEST%20m%3d%2b0.083348543">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="https://mvbakker.github.io/img/leaf.ico"
+
+>
+
+
+
+
+
+
+
+
+</head>
+
+
+<body lang="en">
+
+<section class="header">
+    <div class="container">
+        <div class="content">
+            
+            <a href="https://mvbakker.github.io/"><div class="name">Michiel Bakker</div></a>
+            
+            <nav>
+                <ul>
+                    
+                        <li class="nav-blog"><a href="https://mvbakker.github.io/blog/"><span>Blog</span></a></li>
+                    
+                        <li class="nav-about"><a href="https://mvbakker.github.io/about/"><span>About</span></a></li>
+                    
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<section class="icons">
+    <div class="container">
+        <div class="content">
+        
+            <a href="//github.com/mvbakker" target="_blank" rel="noopener"><img class="icon" src="https://mvbakker.github.io/img/github.svg" alt="github" /></a>
+        
+
+        
+
+        
+
+	
+
+        
+
+        
+
+        
+            <a href="//linkedin.com/in/michielvbakker" target="_blank" rel="noopener"><img class="icon" src="https://mvbakker.github.io/img/linkedin.svg" alt="linkedin" /></a>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+            <a href="mailto:mvbakkerblog@gmail.com"><img class="icon" src="https://mvbakker.github.io/img/email.svg" alt="email" /></a>
+        
+
+        
+
+        
+        </div>
+    </div>
+</section>
+
+
+<section class="main post non-narrow zero-top-spacing">
+    <div class="container">
+        <div class="content">
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
+
+    K8s Cluster - Part 1
+
+</div>
+
+                    <div class="initials"><a href="https://mvbakker.github.io/"></a></div>
+                </div>
+                <div class="meta">
+                    
+                    <div class="date" title='Sun Sep 23 2018 17:19:57 CEST'>Sep 23, 2018</div>
+                    
+                    
+		    <div class="reading-time"><div class="middot"></div>9 minutes read</div>
+                    
+                </div>
+            </div>
+            <div class="markdown">
+                
+
+<h2 id="introduction">Introduction</h2>
+
+<p>About a week ago I started learning about K8s. Soon a learned that there are plenty possibilties to run a cluster yourself online (katacoda, play-with-k8s) but I also learned many people installed it themselves on a Raspberry Pi cluster. Challenge accepted!</p>
+
+<p>Below I&rsquo;ll describe why and how I did this (so far). Please note that I am still learning about K8s as well as Ansible, so it could well be that there are other or better ways to do this. Always do your own research of course and I hope this blogpost is helpful.</p>
+
+<h2 id="motivation">Motivation</h2>
+
+<p>After learning about Docker and Docker Swarm, I wanted to see what all the K8s fuzz was about. Over the past months I&rsquo;ve often read that Docker Swarm is not production ready, however K8s is. Additionally you see that many parties choose K8s over Docker Swarm for running their containers. As I am currently still learning about K8s, I cannot yet say which one is &lsquo;better&rsquo; and I expect that it really depends on the requirements each time you containerize a system/application. Still, so far I&rsquo;ve seen that K8s is pretty neat and looks like a very elegant tool for container orchestration.</p>
+
+<p>Therefore my goal is to pass the Certified Kubernetes Administrator (link 1) exam. This is a hands-on exam where one really needs to show their skills in administrating K8s platforms and implement/configure container deployments. To me the best way to learn that is by creating my own cluster on a set of Raspberry Pis I had laying around anyway. Via this blog series I&rsquo;ll share how I set up my cluster and what did and didn&rsquo;t work for me. Enjoy!</p>
+
+<h2 id="hardware-setup">Hardware setup</h2>
+
+<p>In my case I already had all the hardware laying around. After a quick research I learned that Raspberry Pi 2B models are able to run K8s so there I went. My hardware consists of:</p>
+
+<ul>
+<li>3 Raspberry Pi 2B</li>
+<li>an old Sitecom switch</li>
+<li>4 LAN cables</li>
+<li>3 microSD card 16GB</li>
+<li>3 microUSB charging cables (from Anker)</li>
+<li>1 usb charging dock with five ports (note that a Raspberry Pi needs 2 Amps to function properly, do not go below, this will give you all kind of nasty troubleshooting)</li>
+</ul>
+
+<p>Additionally, bear in mind that in order to set everything up you&rsquo;ll need to have:</p>
+
+<ul>
+<li>a microSD card reader</li>
+<li>a monitor and keyboard</li>
+<li>computer with internet</li>
+</ul>
+
+<p>Moreover, I would recommend to make sure you have a harddrive with enough space to create some backups of all the microSD cards during the setup. In case something doesn&rsquo;t go as planned you don&rsquo;t have to start all over.</p>
+
+<h2 id="cluster-preparation">Cluster preparation</h2>
+
+<p>This is not the first time I set up a cluster of Raspberry Pis. This is however the first time I want to use Ansible as a configuration management tool. It is a hassle to install and configure multiple Raspberry Pis manually and a mistake/misstep is created easily. First each Raspberry Pi will be installed and configured in general, in the next section I&rsquo;ll explain how to configure the Raspberry Pis for Ansible and how it should (and shouldn&rsquo;t) be installed.</p>
+
+<p>As a brief architecture, I have three RasPi&rsquo;s of which one will be a K8s master and two will be K8s workers. For now all the RasPi&rsquo;s will need to have the same set-up, this will only change once we start configuring K8s.</p>
+
+<p>As a base image I went with <a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian Lite</a>. Previously I used DietPi a lot, which I really liked, however I read that most people started off with Raspbian Lite for their K8s cluster, so it seemed like a safe choice. After downloading the Raspbian Lite image (I used version labelled 2018-06-27) write it to the three microSD cards. <a href="https://www.raspberrypi.org/documentation/installation/installing-images/README.md">Here is a link</a> to the Raspberry Pi documentation explaining how to do it, if you are on a linux machine simply run:</p>
+
+<pre><code>sudo dd bs=4M if=/path/to/image of=/dev/&lt;microSD&gt;
+</code></pre>
+
+<p>Note: run &lsquo;lsblk&rsquo; on your linux machine to see the path to your disk, i.e. &lsquo;/dev/sda&rsquo;. Do not use the partitions &lsquo;/dev/sda1&rsquo;, but write it to the drive itself.</p>
+
+<p>After all the microSD cards are ready, insert them into the RasPis and hook the first RasPi on to a monitor, internet and keyboard. Then turn it on, if it boots it&rsquo;s fine, well done!</p>
+
+<p>A fresh image always has the user &lsquo;pi&rsquo; and password &lsquo;raspberry&rsquo;, this will have to be changed first! Please run:</p>
+
+<pre><code>sudo raspi-config
+</code></pre>
+
+<p>Change the password (first option), then go to network options and change to the hostname to something more convenient (I used: master, worker1, worker2). Finally, in this menu, go to &lsquo;Advanced Options&rsquo; and expand the filesystem (first option). Then finish and reboot the system.</p>
+
+<p>After the Raspi is rebooted, we&rsquo;ll update the system, please run:</p>
+
+<p>command: sudo apt-get update &amp;&amp; sudo apt-get -y upgrade</p>
+
+<p>It is not handy to work with the RasPi&rsquo;s in this manner. It would be much easier if you could log on to the small machines remotely. We will do this via SSH, therefore we need two things:</p>
+
+<ul>
+<li>enable SSH on the RasPi</li>
+<li>fix the IP-addresses</li>
+</ul>
+
+<p>The first step is the easiest, just run:</p>
+
+<pre><code>sudo systemctl enable ssh &amp;&amp; sudo systemctl start ssh
+</code></pre>
+
+<p>The second step can be a little more challenging. In my case I had to configure my router to fix the IP-addresses by logging in and matching the MAC-address of the RasPi&rsquo;s to a choosen IP-address. Additionally edit the file at &lsquo;/etc/dhcpcd.conf&rsquo; and uncomment the section that states &lsquo;define static profile&rsquo;. As an example, mine looked like:</p>
+
+<pre><code># It is possible to fall back to a static IP if DHCP fails:
+# define static profile
+profile static_eth0
+static ip_address=&lt;fixed-IP-address-RasPi&gt;
+static routers=&lt;IP-address-Router&gt;
+static domain_name_servers=&lt;IP-address-Router&gt;
+</code></pre>
+
+<p>Check if it worked by running the following command after rebooting:</p>
+
+<pre><code>ifconfig
+</code></pre>
+
+<p>Now repeat this process for all the RasPi&rsquo;s.</p>
+
+<h2 id="ansible-installation">Ansible installation</h2>
+
+<p>Now let&rsquo;s start with the Ansible installation. This will make sure that we won&rsquo;t have to manually configure each RasPi individually anymore, which by now I think you definitely see the advantage. Ansible works via the SSH, therefore we&rsquo;ll need to make sure that this works flawelessly without the need for using passwords. I am not sure yet if this is overkill or necessary, however, I configured it such that each RasPi can SSH without a password request to all the other RasPi&rsquo;s. But first it is a good practice to create a generic user for Ansible, I named her &lsquo;ans&rsquo;. To do this, please run:</p>
+
+<pre><code>sudo adduser ans
+</code></pre>
+
+<p>Keep everything generic (password wise). Moreover, &lsquo;ans&rsquo; will need to have the right to sudo without a password. To add &lsquo;ans&rsquo; to the group of sudoers, please run:</p>
+
+<pre><code>sudo adduser ans sudo
+</code></pre>
+
+<p>Finally, copy the file &lsquo;/etc/sudoers.d/010_pi-nopasswd&rsquo; to &lsquo;/etc/sudoers.d/010_ans-nopasswd&rsquo;, by running:</p>
+
+<pre><code>sudo cp /etc/sudoers.d/010_pi-nopasswd /etc/sudoers.d/010_and-nopasswd
+</code></pre>
+
+<p>This new file needs to be slightly adjusted. Open it using your favorite text-editor (nano, vim, vi, emacs) and change the name &lsquo;pi&rsquo; to &lsquo;ans&rsquo;, save and close. Switch to the &lsquo;ans&rsquo; user and test if you can sudo without a password request, run:</p>
+
+<pre><code>su ans
+sudo apt-get update
+</code></pre>
+
+<p>Repeat this process for all RasPi&rsquo;s.</p>
+
+<p>Depending on how comfortable you feel to not make a mistake, this would be a good moment to also create a back-up of the images. See <a href="https://www.raspberrypi.org/documentation/linux/filesystem/backup.md">here</a> how thats done.</p>
+
+<p>It is handy to add the other RasPis to the &lsquo;/etc/hosts&rsquo; file on each RasPi. In this way you can just type &lsquo;ssh master&rsquo; for instance, instead of having to type the IP-addresses. It is as simple as adding at the bottom of the file some lines that state:</p>
+
+<pre><code># Kubernetes cluster
+192.168.192.10  master
+192.168.192.11  worker1
+192.168.192.12  worker2
+</code></pre>
+
+<p>Next up, we need Ansible &lsquo;ans&rsquo; user to SSH to each machine without using a password to log in. This is done using ssh-keys. On each machine (also your laptop/desktop which you use to connect to the cluster) run:</p>
+
+<pre><code>sudo ssh-keygen
+</code></pre>
+
+<p>Followed by:</p>
+
+<pre><code>sudo ssh-copy-id &lt;IP-address of other RasPi&gt;
+</code></pre>
+
+<p>And type the password of &lsquo;ans&rsquo;. Note: the &lsquo;ssh-copy-id&rsquo; command will have to be run from each machine towards all the other machines. Now you should be able to SSH from every machine to another machine without the need to enter a password for &lsquo;ans&rsquo;.</p>
+
+<p>The cluster is now &lsquo;Ansible-ready&rsquo;, so let&rsquo;s start installing Ansible. I&rsquo;ve tried multiple ways and couldn&rsquo;t find a clear instruction online. Seems like most people did this in 2016 and many just compiled Ansible from the source code. The following options did not work for me:</p>
+
+<ul>
+<li>using sudo apt-get install ansible (generic method for Debian, also didn&rsquo;t work after installing dependencies)</li>
+<li>using sudo pip install ansible (also didn&rsquo;t work after installing dependencies like setup-tools)</li>
+</ul>
+
+<p>What did work was the following:</p>
+
+<pre><code>sudo apt-get install python3-pip
+sudo pip3 install ansible
+</code></pre>
+
+<p>Hopefully this works for you as well and it saves you the hassle of trying different approaches and prevents you from having to compile from the source code. Please install it in which ever way you find most convenient.</p>
+
+<p>Additionally, I choose to run Ansible from my desktop, pushing commands towards the cluster from there. Therefore I installed Ansible also locally on my Desktop. This will function as my &lsquo;Control Center&rsquo;, but keep in mind that Ansible is able to push configurations from each machine to all the other machines if the Ansible-config files are shared correctly. As I have no idea what kind of system you are running, please look at the Ansible documentation for <a href="https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html">the installation instructions</a>.</p>
+
+<p>Now that Ansible is installed everywhere, and Ansible user &lsquo;ans&rsquo; can connect to each system without a password where she has sudo rights without a password, we are ready to create/adjust the Ansible hosts file. This file is generally found at &lsquo;/etc/ansible/hosts&rsquo;. Simply add the following to the &lsquo;/etc/ansible/hosts&rsquo; file on your &lsquo;Control Center&rsquo; machine, (note: change to IP-addresses if you did not adjust the local /etc/hosts file on the machine):</p>
+
+<pre><code>[K8s]
+master
+worker1
+worker2
+
+[master]
+master
+
+[workers]
+worker1
+worker2
+</code></pre>
+
+<p>Finally, to check if everything works, run your first Ansible command:</p>
+
+<pre><code>ansible all -m ping
+</code></pre>
+
+<p>You should get something similar like this:</p>
+
+<pre><code>192.168.192.11 | SUCCESS =&gt; {
+    &quot;changed&quot;: false,
+    &quot;ping&quot;: &quot;pong&quot;
+}
+192.168.192.10 | SUCCESS =&gt; {
+    &quot;changed&quot;: false,
+    &quot;ping&quot;: &quot;pong&quot;
+}
+192.168.192.12 | SUCCESS =&gt; {
+    &quot;changed&quot;: false,
+    &quot;ping&quot;: &quot;pong&quot;
+}
+</code></pre>
+
+<p>If you did, congratulations!! You&rsquo;ve now got a RasPi cluster with a functioning Ansible installation!</p>
+
+<p>This was it for the first part of the blog on &lsquo;K8s RasPi cluster&rsquo;.</p>
+
+                <br>
+                
+                <p class="back-to-posts"><a href="https://mvbakker.github.io/blog">Back to posts</a></p>
+            </div>
+            <br>
+            <div class="disqus">
+                
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
+  
+
+  <script type="text/javascript">
+    hljs.initHighlightingOnLoad();
+  </script>
+
+
+
+
+
+</body>
+</html>
+
