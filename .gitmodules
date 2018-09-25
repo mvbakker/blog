@@ -1,7 +1,7 @@
 [submodule "public"]
 	path = public
 	url = git@github.com:mvbakker/mvbakker.github.io.git
-	branch = origin/master
+	branch = master
 [submodule "public/mvbakker.github.io"]
 	path = public/mvbakker.github.io
 	url = git@github.com:mvbakker/mvbakker.github.io.git

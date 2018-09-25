@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<meta name="author" content="Michiel Bakker">
+<meta name="description" content="Introduction So I stumbled upon this site: Docker for AWS
+Basically, Docker created a template to deploy a cluster on AWS easily that takes care, among other things, of the loadbalancing and storage, the two architectural topics that Docker usually leaves up to you to resolve and implement correctly.
+Motivation A few weeks ago I decided I wanted to create a highly available container platform on AWS. I was studying then for the Docker Certified Associate exam and wanted to see what it takes to create such a platform.">
+
+<meta property="og:title" content="Docker for AWS review" />
+<meta property="og:description" content="Introduction So I stumbled upon this site: Docker for AWS
+Basically, Docker created a template to deploy a cluster on AWS easily that takes care, among other things, of the loadbalancing and storage, the two architectural topics that Docker usually leaves up to you to resolve and implement correctly.
+Motivation A few weeks ago I decided I wanted to create a highly available container platform on AWS. I was studying then for the Docker Certified Associate exam and wanted to see what it takes to create such a platform." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://mvbakker.github.io/blog/docker-for-aws-review/" /><meta property="article:published_time" content="2018-08-28T00:00:00&#43;00:00"/>
+<meta property="article:modified_time" content="2018-08-28T00:00:00&#43;00:00"/>
+
+<title>
+
+
+     Docker for AWS review 
+
+</title>
+<link rel="canonical" href="https://mvbakker.github.io/blog/docker-for-aws-review/">
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Ubuntu+Mono:400,400i,700,700i|Raleway:500">
+
+
+
+    
+    <link rel="stylesheet" href="https://mvbakker.github.io/css/reset.css?t=2018-09-25%2019%3a08%3a06.824171557%20%2b0200%20CEST%20m%3d%2b0.085701714">
+    <link rel="stylesheet" href="https://mvbakker.github.io/css/pygments.css?t=2018-09-25%2019%3a08%3a06.824171557%20%2b0200%20CEST%20m%3d%2b0.085701714">
+    <link rel="stylesheet" href="https://mvbakker.github.io/css/main.css?t=2018-09-25%2019%3a08%3a06.824171557%20%2b0200%20CEST%20m%3d%2b0.085701714">
+    
+        <link rel="stylesheet" href="https://mvbakker.github.io/css/override.css?t=2018-09-25%2019%3a08%3a06.824171557%20%2b0200%20CEST%20m%3d%2b0.085701714">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="https://mvbakker.github.io/img/leaf.ico"
+
+>
+
+
+
+
+
+
+
+
+</head>
+
+
+<body lang="en">
+
+<section class="header">
+    <div class="container">
+        <div class="content">
+            
+            <a href="https://mvbakker.github.io/"><div class="name">Michiel Bakker</div></a>
+            
+            <nav>
+                <ul>
+                    
+                        <li class="nav-blog"><a href="https://mvbakker.github.io/blog/"><span>Blog</span></a></li>
+                    
+                        <li class="nav-about"><a href="https://mvbakker.github.io/about/"><span>About</span></a></li>
+                    
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<section class="icons">
+    <div class="container">
+        <div class="content">
+        
+            <a href="//github.com/mvbakker" target="_blank" rel="noopener"><img class="icon" src="https://mvbakker.github.io/img/github.svg" alt="github" /></a>
+        
+
+        
+
+        
+
+	
+
+        
+
+        
+
+        
+            <a href="//linkedin.com/in/michielvbakker" target="_blank" rel="noopener"><img class="icon" src="https://mvbakker.github.io/img/linkedin.svg" alt="linkedin" /></a>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+            <a href="mailto:mvbakkerblog@gmail.com"><img class="icon" src="https://mvbakker.github.io/img/email.svg" alt="email" /></a>
+        
+
+        
+
+        
+        </div>
+    </div>
+</section>
+
+
+<section class="main post non-narrow zero-top-spacing">
+    <div class="container">
+        <div class="content">
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
+
+    Docker for AWS review
+
+</div>
+
+                    <div class="initials"><a href="https://mvbakker.github.io/"></a></div>
+                </div>
+                <div class="meta">
+                    
+                    <div class="date" title='Tue Aug 28 2018 00:00:00 UTC'>Aug 28, 2018</div>
+                    
+                    
+		    <div class="reading-time"><div class="middot"></div>7 minutes read</div>
+                    
+                </div>
+            </div>
+            <div class="markdown">
+                
+
+<h3 id="introduction">Introduction</h3>
+
+<p>So I stumbled upon this site: <a href="https://docs.docker.com/docker-for-aws/why/">Docker for AWS</a></p>
+
+<p>Basically, Docker created a template to deploy a cluster on AWS easily that takes care, among other things, of the loadbalancing and storage, the two architectural topics that Docker usually leaves up to you to resolve and implement correctly.</p>
+
+<h3 id="motivation">Motivation</h3>
+
+<p>A few weeks ago I decided I wanted to create a highly available container platform on AWS. I was studying then for the <a href="https://success.docker.com/certification">Docker Certified Associate</a> exam and wanted to see what it takes to create such a platform. Additionally, I decided to run the latest <a href="https://nextcloud.com/">Nextcloud</a> on this platform, all in containers. This seemed like a proper final challenge to get ready for the certification exam. (This is also the reason why I didn&rsquo;t use one of the AWS containers services, as I needed to learn more about Docker).</p>
+
+<h3 id="why-docker-for-aws">Why Docker for AWS</h3>
+
+<p>Setting up this platform for hosting an actual application immediately challenged me to think about persistent storage and load-balancing. Why? Because:</p>
+
+<ul>
+<li>Docker Volumes are generally saved and persist, but they do this locally. If a node fails and Docker Swarm deploys the same container on a different node, the volume that was attached to it on the failed node is not available if the default volume driver is used. A different storage solution for Docker Volumes is needed for a cluster.</li>
+<li>In AWS the IP addresses of the EC2 instances can easily change. Additionally, if you point your DNS-Domain to one EC2 instance and that one fails, the whole application is unreachable.</li>
+</ul>
+
+<p>For load-balancing AWS provides <a href="https://aws.amazon.com/elasticloadbalancing">a great solution</a>, so I wasn&rsquo;t too worried about that.</p>
+
+<p>For the persistent storage I looked first into other solutions and decided to see if I could install and implement the <a href="https://rexray.readthedocs.io/en/latest/user-guide/schedulers/docker/plug-ins/aws/#simple-storage-service">REX-Ray volume driver for S3FS</a>. This seemed like a very nice solution for the volumes. The storage would be very cheap (0.03ct/GB) compared to EBS (0.12ct/GB) or EFS (0.33ct/GB). Since I would only use it for Nextcloud, a file-sharing platform, it wouldn&rsquo;t have to be very fast anyway.</p>
+
+<p>However, I stumbled upon many issues when trying to install and configure the driver. Additionally, REX-Ray makes use of the <a href="https://github.com/s3fs-fuse/s3fs-fuse/wiki/Fuse-Over-Amazon">S3FS-fuse plugin</a>, so often when trouble-shooting you&rsquo;re being send from the &lsquo;closet to the wall&rsquo; as we say in Dutch. After a few days of figgling and trying to get it to work, I decided not to persue my ambitions to create a persistent storage solution with the REX-Ray S3FS volume driver.</p>
+
+<p>That&rsquo;s when I stumbled upon <a href="https://docs.docker.com/docker-for-aws/why/">Docker for AWS</a>.</p>
+
+<p>This solves the two challanges of load-balancing and persistent storage. &lsquo;Unfortunately&rsquo; it also takes away the fun and learning experience of installing and configuring a whole platform/cluster by yourself. Usually this kind of automation via infrastructure-as-code is what you want, but for learning purposes it would&rsquo;ve been nice to install and configure it manually myself.
+The CloudFormation TemplateThe &lsquo;Docker for AWS&rsquo; solution is deployed automatically via CloudFormation, the source is shared <a href="https://github.com/docker/for-aws">here</a> on Github. A template is simplyl available where you will have to fill in the following variables that define the size/architecture of the container platform it will deploy:</p>
+
+<ul>
+<li>Select the SSH key that you&rsquo;d want to use</li>
+<li>EC2 instance type for workers and managers (separately)</li>
+<li>Amount of worker and manager instances</li>
+<li>Storage options for the worker and manager instances</li>
+<li>EnableSystemPrune (when enabled the command &lsquo;docker system prune&rsquo; will run everyday automatically)</li>
+<li>Enable CloudWatch logs</li>
+</ul>
+
+<p>Everything will be configured and deployed by the CloudFormation template then. After this installation you can simply log on to the nodes using the SSH key you supplied and start running your containers/services.</p>
+
+<h3 id="the-cloudstor-plug-in">The Cloudstor plug-in</h3>
+
+<p>One of the nice features of Docker for AWS is the Cloudstor plugin. This plugin offers two different type of volumes:</p>
+
+<ul>
+<li>Relocatable volumes, backed by EBS</li>
+<li>Shared volumes, backed by EFS</li>
+</ul>
+
+<h5 id="relocatable-volumes">Relocatable volumes</h5>
+
+<p>Relocatable volumes are backed by EBS, the Elastic Block Storage service provided by AWS. Additionally, you can specify which kind of EBS storage you need (gp2, io1, st1, sc1) depending on your workload. On the background I believe the plugin mounts a volume to the node/instance of the host that the container runs on. When this node/instance fails or the container is moved to another node/instance for another reason, the plugin takes care of the EBS volume to be mounted on the new host node/instance. It might take a while for the volume to be available on the other node/instance though, especially if the node/instance is in a different availablility zone (this might cause troubles with your orchestrator). Moreover, it is not possible for containers to have both access to the same volume if the containers are running on different nodes/instances.</p>
+
+<h5 id="shared-volumes">Shared volumes</h5>
+
+<p>Shared volumes are backed by EFS, the Elastic File System service provided by AWS. Each node/instance in the &lsquo;Docker for AWS&rsquo; cluster will be mounted to the EFS service and therefore each volume created on the EFS storage will be available on all nodes/instances at all times. This makes it also possible for containers that run on different nodes/instances to use the same volumes (although I would not recommend this). Containers can however change host much more quickly.</p>
+
+<p>All in all, this gives a multi-flavoured out-of-the-box solution for persistent storage, nice job!</p>
+
+<p>Note that there is no option with this plugin to use S3 buckets. This is a pity, although I wonder in general whether this would be a proper solution. It could well be that volumes on S3 buckets are not fast enough for Docker to work with and will therefore cause a lot of issues. (Luckily I found that on Nextcloud itself you can install a 3rd-party storage plugin, that allows you to mount S3 buckets to Nextcloud from an application point of view, instead of on the infrastructure layer, therefore I could still make sure that all the large files would be stored on cheap storage and not on expensive EBS or EFS).</p>
+
+<h3 id="load-balancing">Load-Balancing</h3>
+
+<p>The load-balancer is configured to listen to port 80 and 443 (only). When you open a port on the cluster via a container or a service, than the load-balancer is able to reach it. If you are planning on only running one web-service on your cluster, than this will be sufficient. Otherwise you&rsquo;ll have to install something like <a href="https://traefik.io/">Traefik</a>.</p>
+
+<p>Traefik will ensure that you can route multiple services over port 80 and 443, while traefik takes care of the internal load-balancing within the container platform. Pascal Andy created a nice <a href="https://pascalandy.com/blog/traefik-demo-docker-stack-and-play-with-docker/">Traefik tutorial</a> to deploy it quickly on <a href="http://labs.play-with-docker.com/!">http://labs.play-with-docker.com/!</a> Additionally, I created a small <a href="https://github.com/mvbakker/Traefik_setup">stack-file to deploy Treafik on the Docker for AWS</a> platform.</p>
+
+<p>Additionally Docker for AWS provides you to make use of the <a href="https://aws.amazon.com/certificate-manager/">free SSL certificate service</a>. This makes secure web-services very easy. I used DNS validation, where you basically have you domain provider configured to have one CNAME-record pointing from (one of your sub)domain(s) to the url of the ELB of the Docker for AWS cluster and one CNAME-record for validation. Note: make sure to <a href="http://www.dns-sd.org/trailingdotsindomainnames.html">add the trailing dot</a> to the validation address that AWS provides you. This was a stupid mistake and valuable lesson, please use it to your advantage.</p>
+
+<h3 id="costs">Costs</h3>
+
+<p>Finally I destroyed the Docker for AWS cluster after a month. The bill was pretty high, as I wanted to have my Nextcloud available <sup>24</sup>&frasl;<sub>7</sub>. I set up Docker for AWS with two micro instances, one manager and one worker (which was an overkill probably, but you simply need at least two instances to have a cluster). I used the EFS storage for the plugin, this costs only 14 cents for the whole month, since this was only used for the storage needed by the application to function.</p>
+
+<p>The costs of running Docker for AWS with two t2.micro instances for ~750 hours costs in total: $57.66</p>
+
+<p>The biggest cost was to have to load-balancer in place ($21.46 for 766 hours and 0.292GB traffic).</p>
+
+<p>Eventhough Docker for AWS is a very nice out-of-the-box solution to deploy a container cluster on AWS, the costs were simply too high for my small application. Other than that, it all worked pretty sweet!</p>
+
+                <br>
+                
+                <p class="back-to-posts"><a href="https://mvbakker.github.io/blog">Back to posts</a></p>
+            </div>
+            <br>
+            <div class="disqus">
+                
+            </div>
+            
+        </div>
+    </div>
+</section>
+
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
+  
+
+  <script type="text/javascript">
+    hljs.initHighlightingOnLoad();
+  </script>
+
+
+
+
+
+</body>
+</html>
+

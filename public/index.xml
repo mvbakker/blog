@@ -22,6 +22,17 @@ Below I&amp;rsquo;ll describe why and how I did this (so far). Please note that 
     </item>
     
     <item>
+      <title>Docker for AWS review</title>
+      <link>https://mvbakker.github.io/blog/docker-for-aws-review/</link>
+      <pubDate>Tue, 28 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://mvbakker.github.io/blog/docker-for-aws-review/</guid>
+      <description>Introduction So I stumbled upon this site: Docker for AWS
+Basically, Docker created a template to deploy a cluster on AWS easily that takes care, among other things, of the loadbalancing and storage, the two architectural topics that Docker usually leaves up to you to resolve and implement correctly.
+Motivation A few weeks ago I decided I wanted to create a highly available container platform on AWS. I was studying then for the Docker Certified Associate exam and wanted to see what it takes to create such a platform.</description>
+    </item>
+    
+    <item>
       <title>OpenFOAM on a Raspberry Pi cluster</title>
       <link>https://mvbakker.github.io/blog/openfoam-on-raspi-cluster/</link>
       <pubDate>Wed, 07 Sep 2016 00:00:00 +0000</pubDate>
