@@ -1,8 +1,8 @@
 ---
-title: "Docker for AWS review"
+title: "Docker for AWS experiences"
 date: "2018-08-28"
 draft: false
-slug: docker-for-aws-review
+slug: docker-for-aws-experiences
 author: "Michiel Bakker"
 ---
 
