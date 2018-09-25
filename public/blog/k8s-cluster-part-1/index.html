@@ -9,11 +9,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="referrer" content="no-referrer">
 <meta name="author" content="Michiel Bakker">
-<meta name="description" content="Introduction About a week ago I started learning about K8s. Soon a learned that there are plenty possibilties to run a cluster yourself online (katacoda, play-with-k8s) but I also learned many people installed it themselves on a Raspberry Pi cluster. Challenge accepted!
+<meta name="description" content="Introduction About a week ago I started learning about K8s. Soon I learned that there are plenty possibilties to run a cluster yourself online (katacoda, play-with-k8s) but I also learned many people installed it themselves on a Raspberry Pi cluster. Challenge accepted!
 Below I&rsquo;ll describe why and how I did this (so far). Please note that I am still learning about K8s as well as Ansible, so it could well be that there are other or better ways to do this.">
 
-<meta property="og:title" content="K8s Cluster - Part 1" />
-<meta property="og:description" content="Introduction About a week ago I started learning about K8s. Soon a learned that there are plenty possibilties to run a cluster yourself online (katacoda, play-with-k8s) but I also learned many people installed it themselves on a Raspberry Pi cluster. Challenge accepted!
+<meta property="og:title" content="K8s on Raspberry Pi Cluster - Part 1" />
+<meta property="og:description" content="Introduction About a week ago I started learning about K8s. Soon I learned that there are plenty possibilties to run a cluster yourself online (katacoda, play-with-k8s) but I also learned many people installed it themselves on a Raspberry Pi cluster. Challenge accepted!
 Below I&rsquo;ll describe why and how I did this (so far). Please note that I am still learning about K8s as well as Ansible, so it could well be that there are other or better ways to do this." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://mvbakker.github.io/blog/k8s-cluster-part-1/" /><meta property="article:published_time" content="2018-09-23T17:19:57&#43;02:00"/>
@@ -22,7 +22,7 @@ Below I&rsquo;ll describe why and how I did this (so far). Please note that I am
 <title>
 
 
-     K8s Cluster - Part 1 
+     K8s on Raspberry Pi Cluster - Part 1 
 
 </title>
 <link rel="canonical" href="https://mvbakker.github.io/blog/k8s-cluster-part-1/">
@@ -43,11 +43,11 @@ Below I&rsquo;ll describe why and how I did this (so far). Please note that I am
 
 
     
-    <link rel="stylesheet" href="https://mvbakker.github.io/css/reset.css?t=2018-09-25%2019%3a08%3a06.822869054%20%2b0200%20CEST%20m%3d%2b0.084399198">
-    <link rel="stylesheet" href="https://mvbakker.github.io/css/pygments.css?t=2018-09-25%2019%3a08%3a06.822869054%20%2b0200%20CEST%20m%3d%2b0.084399198">
-    <link rel="stylesheet" href="https://mvbakker.github.io/css/main.css?t=2018-09-25%2019%3a08%3a06.822869054%20%2b0200%20CEST%20m%3d%2b0.084399198">
+    <link rel="stylesheet" href="https://mvbakker.github.io/css/reset.css?t=2018-09-25%2019%3a21%3a07.953760602%20%2b0200%20CEST%20m%3d%2b0.083594864">
+    <link rel="stylesheet" href="https://mvbakker.github.io/css/pygments.css?t=2018-09-25%2019%3a21%3a07.953760602%20%2b0200%20CEST%20m%3d%2b0.083594864">
+    <link rel="stylesheet" href="https://mvbakker.github.io/css/main.css?t=2018-09-25%2019%3a21%3a07.953760602%20%2b0200%20CEST%20m%3d%2b0.083594864">
     
-        <link rel="stylesheet" href="https://mvbakker.github.io/css/override.css?t=2018-09-25%2019%3a08%3a06.822869054%20%2b0200%20CEST%20m%3d%2b0.084399198">
+        <link rel="stylesheet" href="https://mvbakker.github.io/css/override.css?t=2018-09-25%2019%3a21%3a07.953760602%20%2b0200%20CEST%20m%3d%2b0.083594864">
     
 
 
@@ -138,7 +138,7 @@ Below I&rsquo;ll describe why and how I did this (so far). Please note that I am
                 <div class="title-container">
                     <div class="page-heading">
 
-    K8s Cluster - Part 1
+    K8s on Raspberry Pi Cluster - Part 1
 
 </div>
 
@@ -158,7 +158,7 @@ Below I&rsquo;ll describe why and how I did this (so far). Please note that I am
 
 <h2 id="introduction">Introduction</h2>
 
-<p>About a week ago I started learning about K8s. Soon a learned that there are plenty possibilties to run a cluster yourself online (katacoda, play-with-k8s) but I also learned many people installed it themselves on a Raspberry Pi cluster. Challenge accepted!</p>
+<p>About a week ago I started learning about K8s. Soon I learned that there are plenty possibilties to run a cluster yourself online (katacoda, play-with-k8s) but I also learned many people installed it themselves on a Raspberry Pi cluster. Challenge accepted!</p>
 
 <p>Below I&rsquo;ll describe why and how I did this (so far). Please note that I am still learning about K8s as well as Ansible, so it could well be that there are other or better ways to do this. Always do your own research of course and I hope this blogpost is helpful.</p>
 

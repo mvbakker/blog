@@ -1,5 +1,5 @@
 ---
-title: "K8s Cluster - Part 1"
+title: "K8s on Raspberry Pi Cluster - Part 1"
 date: "2018-09-23T17:19:57+02:00"
 categories: ["posts"]
 draft: "false"
@@ -9,7 +9,7 @@ author: "Michiel Bakker"
 
 ## Introduction
 
-About a week ago I started learning about K8s. Soon a learned that there are plenty possibilties to run a cluster yourself online (katacoda, play-with-k8s) but I also learned many people installed it themselves on a Raspberry Pi cluster. Challenge accepted!
+About a week ago I started learning about K8s. Soon I learned that there are plenty possibilties to run a cluster yourself online (katacoda, play-with-k8s) but I also learned many people installed it themselves on a Raspberry Pi cluster. Challenge accepted!
 
 Below I'll describe why and how I did this (so far). Please note that I am still learning about K8s as well as Ansible, so it could well be that there are other or better ways to do this. Always do your own research of course and I hope this blogpost is helpful.
 
